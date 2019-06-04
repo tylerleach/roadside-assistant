@@ -1,0 +1,23 @@
+-- Default Admin Account Details --
+username: Admin
+password: administrator
+
+
+*NOTE: Before starting you need to run npm install in both the client directory and server directory*
+
+-- Instructions On How To Run Site --
+1) Ensure you have mongodb installed
+2) Ensure you have a collection called roadside-assistant created
+3) Open command prompt window or terminal in the server directory
+4) Open another command prompt window or terminal in the client directory
+5) In the terminal for the server directory use: 'npm start'
+6) In the terminal for the client directory use: 'npm start'
+7) A browser should automatically open up
+8) If a browser does not automatically open, open one and go to 'localhost:8080'
+9) Login or register and enjoy
+
+-- Instructions On How To Run Test Script --
+1) You need to have atleast followed the above steps once before doing this!
+2) Open a command prompt window or terminal in the server directory
+3) Execute the command: 'npm run example'
+4) Sit back and relax while it runs
