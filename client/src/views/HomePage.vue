@@ -117,8 +117,7 @@ export default {
                     .then(
                         bankDetails => {
                             this.bankDetails = bankDetails;
-
-                            if (this.bankDetails == null) { this.showBankAlert = true; }
+                            if (!this.bankDetails.bsb) { this.showBankAlert = true; }
                         }
                     );
             } else {

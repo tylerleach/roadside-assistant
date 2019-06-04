@@ -14,7 +14,7 @@
             <div v-if="toggleSuccessMsg" class="alert">Successfully changed Bank details.</div>
             <div v-else>
                 <Row>
-                    <Col span="4"><br></Col>
+                    <updateDetailsSideNav activeName="updateBank"></updateDetailsSideNav>
                     <Col span="16" class="updateForm">
                         <Card :padding="30" style="width:800px">
                             <p slot="title">Update your Bank details</p>
@@ -42,6 +42,7 @@
 import { mapState, mapActions } from 'vuex';
 import { userService,authenticationService } from '@/_services';
 import Navigation from '@/components/Navigation';
+import updateDetailsSideNav from '@/components/updateDetailsSideBar';
 
 export default{
     data () {
@@ -54,7 +55,8 @@ export default{
         }
     },
     components: {
-        'Navigation': Navigation
+        'Navigation': Navigation,
+        'updateDetailsSideNav': updateDetailsSideNav
     },
     methods: {
         onSubmit(){

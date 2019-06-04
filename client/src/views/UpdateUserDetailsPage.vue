@@ -23,7 +23,7 @@
         <div class="content">
             <div>
                 <Row>
-                    <Col span="4"><br></Col>
+                    <updateDetailsSideNav activeName="updateDetails"></updateDetailsSideNav>
                     <Col span="16" class="updateForm">
                         <Card :padding="30" style="width:800px">
                             <p slot="title">Update your details</p>
@@ -59,6 +59,7 @@
 <script>
 import { userService,authenticationService } from '@/_services';
 import Navigation from '@/components/Navigation';
+import updateDetailsSideNav from '@/components/updateDetailsSideBar';
 
 export default{
     data() {
@@ -75,7 +76,8 @@ export default{
         }
     },
     components: {
-        'Navigation': Navigation
+        'Navigation': Navigation,
+        'updateDetailsSideNav': updateDetailsSideNav
     },
     methods: {
         onSubmit(name) { // name is the name of the data we want to update
