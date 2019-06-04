@@ -37,6 +37,8 @@ const actions = {
         const req = {
             status: request.status
         }
+
+        if (request.amount) { req.amount = request.amount; }
         requestService.update(req, request.id)
             .then(
                 request => commit('updateSuccess', request)

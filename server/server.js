@@ -20,6 +20,7 @@ app.use(jwt());
 // API routes
 app.use('/users', require('./users/users.controller'));
 app.use('/requests', require('./requests/request.controller'));
+app.use('/transactions', require('./transactions/transactions.controller'));
 
 // Error handler
 app.use(errorHandler);
@@ -60,14 +61,18 @@ io.on('connection', (socket) => {
 
     // TODO: Instead of io.to(room), this could just be emitted to the member who requested the service *MAYBE*
     socket.on('acceptRequest', (proParam, roomID) => {
-        io.to(roomID).emit('activeUsers', proParam.username); 
+        io.to(roomID).emit('activeUsers', proParam.username);
     });
 
     // When a member selects which professional they want to respond to their request, retrieve their socketID from the map
     // and notify them of the acceptance
     // TODO: Notify other professionals that their response has be rejected
-    socket.on('chooseProfessional', (username, requestID) => {
-        //activeUsers.get(username);
-        io.to(`${activeUsers.get(username)}`).emit('serviceAccepted', requestID);
+    socket.on('chooseProfessional', (username, requestID, memberUsername) => {
+        io.to(`${activeUsers.get(username)}`).emit('serviceAccepted', requestID, memberUsername);
+    });
+
+    // TODO: On 'serviceCompleted' emit a completion to the member who made the request and notif them of completion and prompt them to make a review for the professional, then redirect them to the make a request page.
+    socket.on('serviceCompleted', (user) => {
+        io.to(`${activeUsers.get(user)}`).emit('serviceCompletedNotify');
     });
 })

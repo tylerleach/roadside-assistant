@@ -10,9 +10,10 @@ const requestSchema = new Schema({
     plateNumber: { type: String, required: true },
     model: { type: String, required: true },
     colour: { type: String, required: true },
-    room: { type: String, required: true },
+    room: { type: String, required: false },
     responders: { type: Array, required: false, default: [] },
-    status: { type: String, enum: ['available', 'in-progress', 'completed'], required: true, default: 'available' }
+    status: { type: String, enum: ['available', 'in-progress', 'completed'], required: true, default: 'available' },
+    amount: { type: Number, required: false }
 });
 
 requestSchema.set('toJSON', { virtuals: true });

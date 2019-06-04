@@ -7,6 +7,8 @@ const router = express.Router();
 router.post('/newTransaction', authorize(), createTransaction);
 router.get('/', authorize('Admin'), getAllTransactions); // Admin only route
 router.get('/:username/pastTransactions', authorize(), getPastTransactions);
+router.get('/getTransactionData', authorize(), getReportData);
+router.get('/getCompanyEarnings/specific', authorize(), getEarningsBetweenDates);
 
 module.exports = router;
 
@@ -24,6 +26,18 @@ function getAllTransactions(req, res, next) {
 
 function getPastTransactions(req, res, next) {
     transactionService.getUsersTransactions(req.params.username)
+        .then(transactions => res.json(transactions))
+        .catch(err => next(err));
+}
+
+function getReportData(req, res, next) {
+    transactionService.getTransactionReportData()
+        .then(data => res.json(data))
+        .catch(err => next(err));
+}
+
+function getEarningsBetweenDates(req, res, next) {
+    transactionService.getCompanyIncomeFromServices(req.body.from, req.body.to)
         .then(transactions => res.json(transactions))
         .catch(err => next(err));
 }

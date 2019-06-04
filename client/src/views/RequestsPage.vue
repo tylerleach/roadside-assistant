@@ -83,7 +83,7 @@ export default {
             if (memberType === 'Per-service') {
                 responder = {
                     responderID: authenticationService.currentUserValue._id,
-                    quote: quotePrice
+                    quote: this.quotePrice
                 };
             } else {
                 responder = {
@@ -118,6 +118,7 @@ export default {
                                 on: {
                                     input: (val) => {
                                         quotePrice = parseFloat(val);
+                                        this.quotePrice = quotePrice;
                                     }
                                 }
                             })
@@ -147,11 +148,12 @@ export default {
             },60000);
         }),
         // If the member accepts this professionals response to their sevice request, notify the professional
-        this.socket.on('serviceAccepted', (requestID) => {
+        this.socket.on('serviceAccepted', (requestID, memberUsername) => {
             router.push({
                 name: 'current-request',
                 params: {
-                    requestId: requestID
+                    requestId: requestID,
+                    memberUsernme: memberUsername
                 }
             });
         })

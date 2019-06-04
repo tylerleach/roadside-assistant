@@ -13,6 +13,7 @@ li {
 <template>
     <div>
         <Navigation activeName="Make Request"></Navigation>
+        <CreateReview v-if="viewReviewModal" :userID="selectedProID"></CreateReview>
         <div class="content">
             <Row>
                 <RequestSide activeName="viewAccepted"></RequestSide>
@@ -26,10 +27,10 @@ li {
                                 <p><strong>Name:</strong> {{user.firstName + " " + user.lastName}}</p>
                                 <p v-if="user.quote"><strong>Quote for service:</strong> ${{user.quote}}</p>
                                 <br>
-                                <Button @click="selectPro(user.username)">Select this professional</Button>
+                                <Button @click="selectPro(user.username, user.professionalID, user.quote)">Select this professional</Button>
                                 <Divider orientation="left">Reviews</Divider>
                                 <ul v-if="user.reviews.length">
-                                    <li v-for="item in user.reviews" :key="item.memberID">
+                                    <li v-for="item in [...user.reviews].reverse().splice(0, 3)" :key="item.username">
                                         <Card>
                                             <p slot="title">
                                                 {{item.username}}
@@ -52,6 +53,7 @@ li {
 <script>
 import { mapState, mapActions } from 'vuex';
 import Navigation from '@/components/Navigation';
+import CreateReview from '@/components/CreateReview';
 import RequestSideNav from '@/components/RequestSidebar';
 import { requestService, authenticationService } from '@/_services';
 
@@ -60,12 +62,16 @@ export default {
         return {
             userList: [],
             socket: null,
-            room: null
+            room: null,
+            selectedPro: null,
+            selectedProID: null,
+            viewReviewModal: false
         }
     },
     components: {
         'Navigation': Navigation,
-        'RequestSide': RequestSideNav
+        'RequestSide': RequestSideNav,
+        'CreateReview': CreateReview
     },
     computed: {
         ...mapState({
@@ -85,24 +91,40 @@ export default {
             updateRequestStatus: 'updateRequest'
         }),
         // TODO: Add an emit event that sends the usernames of the other responders so they can be notified of the rejection
-        selectPro(username) {
+        selectPro(username, proID, quote) {
+            this.selectedPro = username;
+            this.selectedProID = proID;
+
             const sendData = {
                 status: 'in-progress',
                 id: this.$store.state.requests.request._id
             }
+
+            if (quote) { sendData.amount = quote; }
+            
             this.updateRequestStatus(sendData);
-            this.socket.emit('chooseProfessional', username, this.$store.state.requests.request._id);
+            this.socket.emit('chooseProfessional', username, this.$store.state.requests.request._id, this.$store.state.account.user.username);
         }
     },
     mounted: function() {
         this.socket.on('activeUsers', (username) => {
             this.getRequest(this.$store.state.requests.request[0]._id);
-
             requestService.getResponders(this.$store.state.requests.request[0]._id).then(responders => this.userList = responders);
+
             this.$Notice.info({
                 title: username + ' has accepted your request!'
             });
-        })
+        });
+
+        this.socket.on('serviceCompletedNotify', () => {
+            this.$Message.success('Your service request has been completed!');
+
+            this.userList.forEach(user => {
+                if (user.username == this.selectedPro) {
+                    this.viewReviewModal = true;
+                }
+            });
+        });
     }
 }
 </script>

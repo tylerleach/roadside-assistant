@@ -12,6 +12,7 @@ import UpdateUserDetailsPage from '@/views/UpdateUserDetailsPage';
 import AcceptedRequest from '@/views/AcceptedRequest';
 import UpdateBankPage from '@/views/UpdateBankPage';
 import UpdateCardPage from '@/views/UpdateCardPage';
+import ReportPage from '@/views/ReportPage';
 
 Vue.use(Router);
 
@@ -75,6 +76,11 @@ export const router = new Router({
             // which is lazy-loaded when the route is visited.
             component: () => import('@/views/CurrentRequestPage'),
             props: true
+        },
+        {
+            path: '/report',
+            component: ReportPage,
+            meta: { authorize: ['Admin'] }
         },
         
         // Else redirect to home page

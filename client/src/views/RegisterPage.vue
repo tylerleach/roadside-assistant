@@ -1,5 +1,5 @@
 <style scoped>
-.container {
+.content {
     padding: 50px;
 }
 
@@ -11,7 +11,7 @@ p {
 </style>
 
 <template>
-    <div class="container">
+    <div class="content">
         <Row type="flex" justify="center" align="middle">
             <Col span="10">
                 <Card :padding="30">

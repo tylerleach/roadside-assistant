@@ -11,7 +11,9 @@ export const userService = {
     updateCard,
     getCardDetails,
     getBankDetails,
-    delete: _delete
+    addReview,
+    delete: _delete,
+    getUserReportData
 };
 
 function register(user) {
@@ -59,7 +61,17 @@ function getBankDetails(id) {
         .then(handleResponse);
 }
 
+function addReview(review, id) {
+    return fetch(`${config.apiUrl}/users/${id}/addReview`, requestOptions.put(review))
+        .then(handleResponse);
+}
+
 function _delete(id) {
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions.delete(id))
+        .then(handleResponse);
+}
+
+function getUserReportData() {
+    return fetch(`${config.apiUrl}/users/report/getUserReportData`, requestOptions.get())
         .then(handleResponse);
 }

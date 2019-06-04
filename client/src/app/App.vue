@@ -38,7 +38,10 @@ export default {
         }
     },
     created () {
-        this.socket = io('http://localhost:4000');
+        this.socket = io('http://localhost:4000', {
+            transports: ['websocket','polling'],
+            forceNew: true
+        });
 
         this.socket.on('connect', () => {
 

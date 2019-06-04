@@ -16,10 +16,8 @@ console.log("Connection Successful!");
 
 // Default Admin User
 var user1 = new User({ username: 'Admin', hash: 'fill-in', firstName: 'Admin', lastName: 'Privleges', role: 'Admin' });
-
 // Password
 var password = "administrator";
-
 // Hashes the password for storage
 user1.hash = bcrypt.hashSync(password, 10);
 
@@ -37,10 +35,8 @@ var transactionArray = []; // Array of transaction documents
 /* Main Section */
 console.log('Creating test members...');
 createTestMembers();
-
 console.log('Creating test professionals...');
 createTestProfessionals();
-
 console.log('Creating test requests...');
 createTestRequests();
 Transaction.insertMany(transactionArray).then(function() {
@@ -220,7 +216,6 @@ function createTestRequests() {
             timeStamp: ''
         };
 
-
         var arrayOfTempPros = new Map();
         var lastPro = null;
         for (let n = 0; n < numOfResponders; n++) {
@@ -254,7 +249,7 @@ function createTestRequests() {
 
             tmpTransaction.amount = roundToTwoDecimal(tmpRequest.amount * 0.12);
             tmpTransaction.sender = selectedPro.username;
-            tmpTransaction.receiver = 'roadsider-assistant';
+            tmpTransaction.receiver = 'roadside-assistant';
             createTestTransaction2(selectedPro, 'roadside-assistant', tmpTransaction); // For the companys cut
         } else {
             request = new Request(tmpRequest);
@@ -277,7 +272,6 @@ function createTestRequests() {
 // Create a transaction object (for membership subscriptions)
 function createTestTransaction(sender, transactionObj) {
     var to = new Date(2019, 6, 3, 0, 0, 0, 0);
-
     transactionObj.timeStamp = faker.date.between(sender.dateCreated, to);
 
     var transaction = new Transaction(transactionObj);
@@ -310,6 +304,5 @@ function createTestTransaction2(sender, receiver, transactionObj) {
 function roundToTwoDecimal (num){
     var num_sign = num >= 0 ? 1 : -1;
     num = (Math.round((num*Math.pow(10,2))+(num_sign*0.0001))/Math.pow(10,2)).toFixed(2);
-
     return num;
 }

@@ -9,13 +9,11 @@
         <Navigation activeName="Admin"></Navigation>
         <div class="content">
             <Row>
-                <Col span="4"><br></Col>
+                <AdminSideNav activeName="admin"></AdminSideNav>
                 <Col span="16">
-                    <h1>Admin Page</h1>
                     <span v-if="users.error" class="text-danger">ERROR: {{users.error}}</span>
                     <Table border :loading="users.loading" :columns="columns12" :data="users.items" class="user-table">
                         <template slot-scope="{ row, index }" slot="action">
-                            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>
                             <Button type="error" size="small" @click="deleteU(index, row.id)">Delete</Button>
                         </template>
                     </Table>
@@ -29,6 +27,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import Navigation from '@/components/Navigation';
+import AdminSideNav from '@/components/AdminSidebar';
 
 export default {
     data () {
@@ -77,7 +76,8 @@ export default {
         }
     },
     components: {
-        'Navigation': Navigation
+        'Navigation': Navigation,
+        'AdminSideNav': AdminSideNav
     },
     computed: {
         ...mapState({
@@ -99,9 +99,13 @@ export default {
                 title: 'Delete ' + id,
                 content: '<p>Are you sure you want to delete this user?</p>',
                 onOk: () => {
-                    this.$Message.info(id + ' has been deleted from the system.');
-                    this.deleteUser(id);
-                    this.users.splice(index, 1); // Removes the user from the table
+                    if (id == this.account.user._id) {
+                        this.$Message.error('You cannot delete your own account!!!');
+                    } else {
+                        this.$Message.info(id + ' has been deleted from the system.');
+                        this.deleteUser(id);
+                        this.users.splice(index, 1); // Removes the user from the table
+                    }
                 }
             })
         }

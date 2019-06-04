@@ -12,7 +12,10 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    getNumOfNewMembersEachMonth,
+    getNumOfNewProsEachMonth,
+    getUserReportData
 };
 
 // Searches for the user in the database, then if exists checks the password against the stored hashed value, returns a jwt token
@@ -83,4 +86,81 @@ async function update(id, userParam) {
 // Deletes specified user from the database (Works for all user types)
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+async function getNumOfNewMembersEachMonth() {
+    const membersEachMonth = await User.aggregate(
+        [
+            {
+              '$match': {
+                'role': 'Member'
+              }
+            }, {
+              '$group': {
+                '_id': {
+                  'year': {
+                    '$year': '$dateCreated'
+                  }, 
+                  'month': {
+                    '$month': '$dateCreated'
+                  }
+                }, 
+                'count': {
+                  '$sum': 1
+                }
+              }
+            }
+        ]
+    );
+
+    return membersEachMonth;
+}
+
+async function getNumOfNewProsEachMonth() {
+    const prosEachMonth = await User.aggregate(
+        [
+            {
+              '$match': {
+                'role': 'Professional'
+              }
+            }, {
+              '$group': {
+                '_id': {
+                  'year': {
+                    '$year': '$dateCreated'
+                  }, 
+                  'month': {
+                    '$month': '$dateCreated'
+                  }
+                }, 
+                'count': {
+                  '$sum': 1
+                }
+              }
+            }
+        ]
+    );
+
+    return prosEachMonth;
+}
+
+async function getUserReportData() {
+    var data = {
+        totalNumOfMembers: 0,
+        totalNumOfPerService: 0,
+        totalNumOfSubscription: 0,
+        totalNumOfPros: 0
+    };
+
+    const numMem = await Member.find({}).countDocuments();
+    const numPro = await Professional.find({}).countDocuments();
+    const numSubscription = await Member.find({membershipType: "Subscription"}).countDocuments();
+    const numPerService = await Member.find({membershipType: "Per-service"}).countDocuments();
+
+    data.totalNumOfMembers = numMem;
+    data.totalNumOfPerService = numPerService;
+    data.totalNumOfSubscription = numSubscription;
+    data.totalNumOfPros = numPro;
+
+    return data;
 }

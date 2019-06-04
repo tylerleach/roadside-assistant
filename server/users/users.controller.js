@@ -16,9 +16,12 @@ router.delete('/:id', authorize('Admin'), _delete); // Admin only route
 router.put('/creditCard/:id', authorize('Member'), addCard); // Member only route
 router.put('/bankAccount/:id', authorize('Professional'), addBankAccount); // Professional only route
 router.get('/getMemberType/:id', authorize(), getMembershipType);
-router.post('/:id/addReview', authorize('Member'), addReview);
+router.put('/:id/addReview', authorize('Member'), addReview);
 router.get('/creditCard/:id', authorize(), getCreditCardDetails);
 router.get('/bankAccount/:id', authorize(), getBankDetails);
+router.get('/numMembersPerMonth', authorize('Admin'), getMembersPerMonth);
+router.get('/numProsPerMonth', authorize('Admin'), getProsPerMonth);
+router.get('/report/getUserReportData', authorize('Admin'), getUserReportData);
 
 module.exports = router;
 
@@ -105,5 +108,23 @@ function getCreditCardDetails(req, res, next) {
 function getBankDetails(req, res, next) {
     professionalService.getBankAccountDetails(req.params.id)
         .then(bankDetails => res.json(bankDetails))
+        .catch(err => next(err));
+}
+
+function getMembersPerMonth(req, res, next) {
+    userService.getNumOfNewMembersEachMonth()
+        .then(membersEachMonth => res.json(membersEachMonth))
+        .catch(err => next(err));
+}
+
+function getProsPerMonth(req, res, next) {
+    userService.getNumOfNewProsEachMonth()
+        .then(prosEachMonth => res.json(prosEachMonth))
+        .catch(err => next(err));
+}
+
+function getUserReportData(req, res, next) {
+    userService.getUserReportData()
+        .then(data => res.json(data))
         .catch(err => next(err));
 }
